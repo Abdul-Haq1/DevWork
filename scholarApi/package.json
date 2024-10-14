@@ -1,0 +1,15 @@
+{
+  "name": "scholarapi",
+  "version": "1.0.0",
+  "description": "By using this api, user can get all information of that schloar",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "dev": "nodeman index"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
