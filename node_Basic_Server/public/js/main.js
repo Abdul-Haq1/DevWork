@@ -1,7 +1,12 @@
-let paragraph = document.getElementById('pargraph')
+document.querySelector('#clickMe').addEventListener('click', makeReq)
 
-paragraph.addEventListener('click', changeColor)
+async function makeReq() {
+    const student = document.querySelector("#userName").value;
 
-function changeColor() {
-    paragraph.style.color = 'black';
+    const res = await fetch(`/api`);
+    const data = await res.json();
+
+    console.log(data);
+    document.querySelector('#personName').textContent = data.name
+
 }

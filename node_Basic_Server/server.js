@@ -1,9 +1,13 @@
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
-const { error } = require('console');
+const url = require('url');
+const figlet = require('figlet');
 
 const server = http.createServer((req, res) => {
+
+    const parsedUrl = url.parse(req.url, true);
+    const queryObject = parsedUrl.query;
 
     if (req.url === '/') {
         fs.readFile(path.join(__dirname, 'public', 'index.html'),
@@ -15,6 +19,14 @@ const server = http.createServer((req, res) => {
         )
     } else if (req.url === '/about') {
         fs.readFile(path.join(__dirname, 'public', 'about.html'),
+            (err, content) => {
+                if (err) throw err;
+                res.writeHead(200, { 'Content-Type': 'text/html' })
+                res.end(content)
+            }
+        )
+    } else if (req.url === '/contact') {
+        fs.readFile(path.join(__dirname, 'public', 'contact.html'),
             (err, content) => {
                 if (err) throw err;
                 res.writeHead(200, { 'Content-Type': 'text/html' })
@@ -37,6 +49,29 @@ const server = http.createServer((req, res) => {
                 res.end(content, 'utf-8')
             }
         )
+    } else if (req.url == '/api') {
+
+        // Example: Mock database or logic to return data based on student name
+        const responseData = {
+            name: 'Rohit Sharma',
+            status: 'Boss Man',
+            currentOccupation: 'Baller'
+        };
+
+        // Send a 200 status code and the JSON response
+        res.writeHead(200);
+        res.end(JSON.stringify(responseData));
+
+    } else {
+        figlet('404!!', (err, data) => {
+            if (err) {
+                console.log('something went wrong...');
+                console.dir(err);
+                return;
+            }
+            res.write(data)
+            res.end()
+        })
     }
 
 
