@@ -1,20 +1,49 @@
-const http = require('http')
-const fs = require('fs')
 const path = require('path')
+// const fs = require('fs')
 
-const server = http.createServer((req, res) => {
-    if (req.url === '/') {
-        fs.readFile(path.join(__dirname, "public", "index.html"),
-            (err, content) => {
-                if (err) throw err;
-                res.writeHead(200, { 'content-Type': 'text/html' });
-                res.end(content);
-            }
-        )
-    }
-})
+const MongoClient = require('mongodb').MongoClient
+
+const express = require('express')
+const app = express()
 
 const PORT = process.env.PORT || 5000;
 
-server.listen(PORT)
+// ============== middleWares ===================
+
+
+// middleware use to get input value from form
+app.use(express.urlencoded({ extended: true }))
+
+// ===================>
+// setup static folder (middleware) to get rid of ***** app.get() ***** method. 
+// to handle all static pages
+
+// app.get('/', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'public', 'index.html'))
+// });
+
+// app.get('/about', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'public', 'about.html'))
+// });
+
+// app.get('/contact', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'public', 'contact.html'))
+// })
+
+app.use(express.static(path.join(__dirname, 'public')))
+
+
+
+
+
+app.post('/quotes', (req, res) => {
+    console.log(req.body)
+})
+
+
+app.listen(PORT, () => {
+    console.log(`server is running on port ${PORT}`)
+})
+
+
 
