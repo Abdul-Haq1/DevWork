@@ -1,12 +1,41 @@
-const path = require('path')
-// const fs = require('fs')
-
+const path = require('path');
+const dotenv = require('dotenv');
+// const mongoose = require('mongoose');
 const MongoClient = require('mongodb').MongoClient
 
-const express = require('express')
+
+const express = require('express');
 const app = express()
 
+// Loat enviorment variable from .env file
+dotenv.config();
 const PORT = process.env.PORT || 5000;
+const MONGO_URI = process.env.MONGO_URI;
+
+
+
+// connect to mongodb server by using mongoose
+// mongoose.connect(MONGO_URI).then(() => {
+//     console.log("database is connected successfully,");
+// })
+
+// by using mongodb
+MongoClient.connect(MONGO_URI).then(
+    client => {
+        const db = client.db('scholar-details')
+        const schloarCollection = db.collection('schloarDeatils')
+
+        app.post('/quotes', (req, res) => {
+            schloarCollection
+                .insertOne(req.body)
+                .then(result => {
+                    res.redirect('/')
+                }
+                )
+        })
+    }
+).catch((error) => console.log(error))
+
 
 // ============== middleWares ===================
 
@@ -36,14 +65,12 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 
 
-app.post('/quotes', (req, res) => {
-    console.log(req.body)
-})
-
-
 app.listen(PORT, () => {
     console.log(`server is running on port ${PORT}`)
 })
+
+
+
 
 
 
