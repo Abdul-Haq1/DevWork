@@ -19,29 +19,14 @@ const MONGO_URI = process.env.MONGO_URI;
 //     console.log("database is connected successfully,");
 // })
 
-// by using mongodb
-MongoClient.connect(MONGO_URI).then(
-    client => {
-        const db = client.db('scholar-details')
-        const schloarCollection = db.collection('schloarDeatils')
-
-        app.post('/quotes', (req, res) => {
-            schloarCollection
-                .insertOne(req.body)
-                .then(result => {
-                    res.redirect('/')
-                }
-                )
-        })
-    }
-).catch((error) => console.log(error))
 
 
 // ============== middleWares ===================
 
-
+// ===================>
 // middleware use to get input value from form
 app.use(express.urlencoded({ extended: true }))
+
 
 // ===================>
 // setup static folder (middleware) to get rid of ***** app.get() ***** method. 
@@ -59,8 +44,40 @@ app.use(express.urlencoded({ extended: true }))
 //     res.sendFile(path.join(__dirname, 'public', 'contact.html'))
 // })
 
-app.use(express.static(path.join(__dirname, 'public')))
+// app.use(express.static(path.join(__dirname, 'public')))
 
+
+// ===================>
+// setup middleware for ejs view engine 
+// for rendering api output
+app.set('view engine', 'ejs')
+
+// by using mongodb
+MongoClient.connect(MONGO_URI).then(
+    client => {
+        const db = client.db('scholar-details')
+        const schloarCollection = db.collection('schloarDeatils')
+
+        app.post('/quotes', (req, res) => {
+            schloarCollection
+                .insertOne(req.body)
+                .then(result => {
+                    res.redirect('/')
+                }
+                )
+        })
+
+        app.get('/', (req, res) => {
+            db.collection('schloarDeatils')
+                .find()
+                .toArray()
+                .then(results => {
+                    res.render('index.ejs', { schloarDeatils: results })
+                }
+                ).catch((error) => console.log(error))
+        })
+    }
+).catch((error) => console.log(error))
 
 
 
