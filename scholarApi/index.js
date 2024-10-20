@@ -44,7 +44,7 @@ app.use(express.urlencoded({ extended: true }))
 //     res.sendFile(path.join(__dirname, 'public', 'contact.html'))
 // })
 
-// app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public')))
 
 
 // ===================>
@@ -52,6 +52,14 @@ app.use(express.urlencoded({ extended: true }))
 // for rendering api output
 app.set('view engine', 'ejs')
 
+
+// ===================>
+// express JSON middleware to accept JSON data
+app.use(express.json())
+
+
+
+// ============== mongoDB CONNECtion ===================
 // by using mongodb
 MongoClient.connect(MONGO_URI).then(
     client => {
@@ -65,7 +73,7 @@ MongoClient.connect(MONGO_URI).then(
                     res.redirect('/')
                 }
                 )
-        })
+        });
 
         app.get('/', (req, res) => {
             db.collection('schloarDeatils')
@@ -75,6 +83,38 @@ MongoClient.connect(MONGO_URI).then(
                     res.render('index.ejs', { schloarDeatils: results })
                 }
                 ).catch((error) => console.log(error))
+        });
+
+        app.put('/quotes', (req, res) => {
+            schloarCollection
+                .findOneAndUpdate({ name: 'Late Ilyas Kandhlawi' },
+                    {
+                        $set: {
+                            name: req.body.name,
+                            bornIn: req.body.bornIn,
+                            age: req.body.age,
+                        }
+                    },
+                    {
+                        upsert: true,
+                    }
+                )
+                .then(result => {
+                    res.json('success')
+                }).catch(err => console.error(err))
+        })
+
+
+        app.delete('/quotes', (req, res) => {
+            schloarCollection
+                .deleteOne({ name: req.body.name })
+                .then(result => {
+                    if (result.deletedCount === 0) {
+                        return res.json('No information to delete')
+                    }
+                    res.json(`Deleted Late Syed Abul Hasan Ali Hasani Nadw (Ali Miyan) details`)
+                })
+                .catch(error => console.error(error))
         })
     }
 ).catch((error) => console.log(error))
