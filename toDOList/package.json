@@ -1,0 +1,23 @@
+{
+  "name": "todolist",
+  "version": "1.0.0",
+  "description": "It's an app where one can put there to do task and manage them",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server",
+    "dev": "node --watch --env--file = .env server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Abdul Haq",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "mongoose": "^8.7.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
