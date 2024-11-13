@@ -17,6 +17,9 @@ app.use(express.static('public'))
 // middleware to get the data from form 
 app.use(express.urlencoded({ extended: true }))
 
+// middleware used to get ----JSON DATA from server
+app.use(express.json())
+
 
 // connceting mongodb Server
 MONGO_URI = 'mongodb+srv://omeon:omeon@merncluster.eqkfofh.mongodb.net/'
@@ -52,8 +55,24 @@ MongoClient.connect(MONGO_URI).then(client => {
 
     // update method
     app.put('/update-task', (req, res) => {
-        let { id, task } = req.body
-        console.log(id, task)
+
+        console.log(req.body)
+
+        // taskCollection
+        //     .findOneAndUpdate(
+        //         { task: req.body.id },
+        //         {
+        //             $set: {
+        //                 task: req.body.task
+        //             },
+        //         },
+        //         {
+        //             upsert: false,
+        //         }
+        //     )
+        //     .then(result => {
+        //         console.log(result)
+        //     }).catch(error => console.error(error))
     })
 
 }
